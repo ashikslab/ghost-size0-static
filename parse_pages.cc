@@ -51,6 +51,9 @@ int main()
             std::ofstream post_file;
             post_file.open(filename);
             post_file << "<html>";
+			post_file<<"<title>";
+			post_file << post["title"].GetString();
+			post_file <<"</title>";
             post_file << post["html"].GetString();
             post_file <<"</html>";
             post_file.close();   

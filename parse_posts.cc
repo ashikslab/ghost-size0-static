@@ -47,11 +47,14 @@ int main()
             std::string postid = post["id"].GetString();
             std::cout<< postid <<": "<<post["title"].GetString() <<std::endl;
             char filename[64];
-            snprintf(filename, sizeof filename, "content/%s.html", postid.c_str());
+            snprintf(filename, sizeof filename, "content/post-%s.html", postid.c_str());
             std::ofstream post_file;
             post_file.open(filename);
             post_file << "<html>";
             post_file << post["html"].GetString();
+			post_file <<"<title>";
+			post_file << post["title"].GetString();
+			post_file <<"</title>";
             post_file <<"</html>";
             post_file.close();   
           }
