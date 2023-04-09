@@ -3,12 +3,24 @@
 # directory that was passed as a command line argument
 import sys
 import os
+
 from pathlib import Path
 
 # check if the user supplied the correct number of command line arguments
-if len(sys.argv) != 2:
-    print("Usage: python index.py htmlfilesdirectory")
+arglen = len(sys.argv)
+if arglen !=2 and arglen != 4:
+    print("Usage: python index.py htmlfilesdirectory [--listen] [port]")
     sys.exit(1)
+
+listen = False
+port = "8000"
+if arglen == 4:
+    if sys.argv[2] == "--listen":
+        listen = True
+        port = sys.argv[3]
+    else:
+        print("Usage: python index.py htmlfilesdirectory [--listen] [port]")
+        sys.exit(1)
 
 # set the directory from the command line argument
 dir = sys.argv[1]
@@ -36,3 +48,15 @@ for file in sorted(os.listdir(dir)):
 #write a </html> tag to the file
 outfile.write("</html>")
 outfile.close
+
+# wait 1 second
+import time
+time.sleep(1)
+
+fullpath = os.path.abspath(dir)
+if listen:
+    # run a simple python http server to serve the files using SimpleHTTPServer
+    # the server will serve files from the directory that was passed as a command line argument
+    # the server will run in the background
+    import subprocess
+    subprocess.Popen(["python3", "-m", "http.server", port, "--directory", fullpath], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
